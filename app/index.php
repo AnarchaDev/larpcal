@@ -21,20 +21,8 @@ $router->before('GET|POST|PUT|PATCH', '/edit/.*', function () {
 });
 
 $router->get('/', function () {
-    $larps = Larp::getAll(new \DateTime(), ["orgs" => "fittpamp"]);
-    \Nahkampf\Larpcal\Output::write($larps);
-});
-
-// From specific date
-$router->get('/from/(\w+)', function ($date) {
-    $from = new \DateTime($date);
-    $larps = Larp::getAll($from);
-    \Nahkampf\Larpcal\Output::write($larps);
-});
-
-// Get from specific organizer
-$router->get('/org/(\w+)', function ($org) {
-    $larps = Larp::getAll(new \DateTime(), ["org" => $org]);
+    $filters = ($_GET["filters"]) ? (array)$_GET["filters"] : null;
+    $larps = Larp::getAll($filters);
     \Nahkampf\Larpcal\Output::write($larps);
 });
 

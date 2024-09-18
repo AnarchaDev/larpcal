@@ -6,91 +6,100 @@ namespace Nahkampf\Larpcal;
 
 class Larp
 {
+    public int $id;
     public string $name;
-    public array $dates;
-    public string $organizers;
+    public ?array $dates;
+    public ?string $organizers;
     public ?string $pitch;
     public ?string $url;
     public ?string $email;
     public string $published;
     public string $cancelled;
-    public ?\DateTime $changedAt;
-    public int $id;
+    public string $changedAt;
+    public string $createdAt;
+    public ?int $countryId;
+    public ?array $where;
 
-    public function __construct(
-        $name = "?",
-        $dates = [],
-        $organizers = "",
-        $pitch = "",
-        $url = "",
-        $email = "",
-        string $published = "N",
-        $cancelled = "N",
-        $id = false,
-        $changedAt = new \DateTime()
-    ) {
-        $this->name = $name;
-        $this->dates = $dates;
-        $this->organizers = $organizers;
-        $this->pitch = $pitch;
-        $this->url = $url;
-        $this->email = $email;
-        $this->published = $published;
-        $this->cancelled = $cancelled;
-        $this->changedAt = ($changedAt instanceof \DateTime) ? $changedAt : new \DateTime($changedAt);
-        $this->id = $id;
+    public function __construct(array ...$args)
+    {
+        if (!isset($args[0])) {
+            return $this;
+        }
+        $args = $args[0];
+        foreach (array_keys($args) as $idx => $key) {
+            $this->{$key} = $args[$key];
+        }
     }
 
-    /**
-     * Get all larps in calendar
-     * @param \DateTime $fromDate Get all larps that have one (or more) dates equal to or greater than this date
-     * @param array $args Optional arguments for selecting stuff from db. Key-valued, like ["organizer" => "Joe Smith", "genre" => "Fantasy"]
-     *
-     * @return array
-     */
-    public static function getAll(\DateTime $fromDate = new \DateTime(), ?array ...$args): array
+    public static function getAll(?array ...$filters): array
     {
         $db = new DB();
-        $add = null;
-        if ($args) {
-            foreach ($args as $arg) {
-                foreach ($arg as $key => $value) {
-                    switch ($key) {
-                        case "org":
-                            $add = " AND organizers LIKE " . $db->e("%" . $value . "%") . " ";
-                            break;
-                        case "country":
-                            $add = " AND organizers LIKE " . $db->e("%" . $value . "%") . " ";
-                            break;
-                    }
+        // set defaults
+        $sortby = "changedAt";
+        $order = "DESC";
+        $offset = 0;
+        $limit = 10;
+        $larps = [];
+        $andwhere["published"] = "published=\"Y\"";
+        // handle filters and build SQL
+        // todo
+        if (isset($filters)) {
+            foreach ($filters[0] as $key => $value) {
+                switch ($key) {
+                    case "published":
+                        $andwhere["published"] = "published = " . $db->e($value);
+                        break;
+                    case "from":
+                        $andwhere["from"] = "id IN (SELECT larp_id FROM dates WHERE date_start >=" . $db->e($value) . ")";
+                        break;
+                    case "to":
+                        $andwhere["to"] = "id IN (SELECT larp_id FROM dates WHERE date_start <=" . $db->e($value) . ")";
+                        break;
+                    case "org":
+                        $andwhere["org"] = "organizers LIKE (" . $db->e("%{$value}%") . ")";
+                        break;
+                    case "countries":
+                        $countries = explode(",", $value);
+                        foreach ($countries as $country) {
+                            $c[] = $db->e($country);
+                        }
+                        $countries = implode(",", $c);
+                        $andwhere["countries"] = "countryId IN (SELECT id FROM countries WHERE isoAlpha3 IN({$countries}))";
+                        break;
+                    case "continent":
+                        $andwhere["continent"] = "countryId IN (SELECT id FROM countries WHERE continentName=" . $db->e($value) . ")";
+                        break;
+                    case "tags":
+                        break;
+                    case "sortby":
+                        break;
+                    case "order":
+                        break;
+                    case "limit":
+                        break;
+                    case "offset":
+                        break;
                 }
             }
         }
-        $sql = "SELECT MIN(dates.date_start) AS earliest_date, calendar.* FROM dates, calendar WHERE (dates.larp_id = calendar.id) AND (published = \"Y\") AND (date_start >= " . $db->e($fromDate->format("Y-m-d")) . ") $add GROUP BY calendar.id ORDER BY earliest_date ASC";
-        $res = $db->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
-        $larps = [];
-        if (count($res) > 0) {
-            foreach ($res as $idx => $larpdata) {
-                // remove "earliest_date" from result set
-                unset($larpdata["earliest_date"]);
-                $larp = new Larp(...$larpdata);
-                // add dates
-                $larpdata["dates"] = $larp->getDates();
-                $larps[] = [
-                    ...$larpdata
-                ];
-            }
+        $andwhere = implode(" AND ", $andwhere);
+
+        // select the ID of all larps
+        $sql = "SELECT id FROM calendar WHERE {$andwhere} ORDER BY {$sortby} {$order} LIMIT {$offset},{$limit}";
+        $result = $db->getAll($sql);
+        foreach ($result as $idx => $val) {
+            $larps[] = self::getById($val["id"]);
         }
         return $larps;
     }
 
-    public static function getLarpById(int $id)
+    public static function getById(int $id): \Nahkampf\Larpcal\Larp
     {
         $db = new DB();
-        $larpArray = (array)$db->query("SELECT calendar.* FROM calendar WHERE id = " . (int)$id . " AND published = \"Y\"")->fetchObject();
-        $larp = new Larp(...$larpArray);
-        // add dates
+        $result = $db->getOne("SELECT * FROM calendar WHERE id = " . (int)$id);
+        $larp = new Larp($result);
         $larp->dates = $larp->getDates();
+        $larp->where = $larp->getCountryData();
         return $larp;
     }
 
@@ -98,6 +107,21 @@ class Larp
     {
         $db = new DB();
         $sql = "SELECT dates.date_start, dates.date_end FROM dates WHERE larp_id = " . (int)$this->id . " ORDER BY date_start ASC";
-        return $db->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+        return $db->getAll($sql);
+    }
+
+    public function getCountryData()
+    {
+        $db = new DB();
+        if (!$this->countryId) {
+            return [
+                "name" => "Online",
+                "iso" => "--",
+                "continent" => "--"
+            ];
+        }
+        $sql = "SELECT countryName as name, isoAlpha3 as iso, continentName as continent FROM countries WHERE id = " . (int)$this->countryId;
+        $res = $db->getOne($sql);
+        return $db->getOne($sql);
     }
 }

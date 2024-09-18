@@ -36,4 +36,14 @@ class DB
     {
         return $this->conn->quote($str);
     }
+
+    public function getAll($sql)
+    {
+        return $this->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getOne($sql)
+    {
+        return $this->query($sql)->fetch(\PDO::FETCH_ASSOC);
+    }
 }
