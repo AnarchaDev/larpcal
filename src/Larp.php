@@ -93,10 +93,13 @@ class Larp
         return $larps;
     }
 
-    public static function getById(int $id): \Nahkampf\Larpcal\Larp
+    public static function getById(int $id): bool|\Nahkampf\Larpcal\Larp
     {
         $db = new DB();
         $result = $db->getOne("SELECT * FROM calendar WHERE id = " . (int)$id);
+        if (!$result) {
+            return false;
+        }
         $larp = new Larp($result);
         $larp->dates = $larp->getDates();
         $larp->where = $larp->getCountryData();

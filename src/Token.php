@@ -18,7 +18,15 @@ class Token
     public static function checkToken(Larp $larp, string $token)
     {
         $db = new DB();
-        $hash = $db->query("SELECT token_hash FROM tokens WHERE larp_id=" . (int)$larp->id)->fetchObject();
-        print_r($hash);
+        $sql = "SELECT token_hash FROM tokens WHERE larp_id=" . $larp->id;
+        $res = $db->getOne($sql);
+        if (empty($res)) {
+            \Nahkampf\Larpcal\Output::write("An error occured (larp has no token)", 500);
+            exit;
+        }
+        if (password_verify($token, $res["token_hash"])) {
+            return true;
+        }
+        return false;
     }
 }
