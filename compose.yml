@@ -1,7 +1,7 @@
 services:
   php-apache:
     ports:
-      - "8080:80"
+      - "80:80"
     build: './'
     volumes:
       - ./app:/var/www/larpcal/app
