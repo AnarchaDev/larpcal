@@ -1,0 +1,14 @@
+services:
+  php-apache:
+    ports:
+      - "8080:80"
+    build: './'
+    volumes:
+      - ./app:/var/www/larpcal/app
+      - ./src:/var/www/larpcal/src
+    env_file:
+      - path: ./.env
+        required: false
+volumes:
+  app:
+  src:

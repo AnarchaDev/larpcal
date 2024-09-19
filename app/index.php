@@ -1,9 +1,11 @@
 <?php
+
+ob_start();
 require __DIR__ . "/../vendor/autoload.php";
 
 # Get env
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
-$dotenv->load();
+$dotenv->safeLoad();
 
 use \Nahkampf\Larpcal\Larp;
 
@@ -21,7 +23,7 @@ $router->before('GET|POST|PUT|PATCH|DELETE', '/edit/.*', function () {
 });
 
 $router->get('/', function () {
-    $filters = ($_GET["filters"]) ? (array)$_GET["filters"] : null;
+    $filters = (!empty($_GET["filters"])) ? (array)$_GET["filters"] : null;
     $larps = Larp::getAll($filters);
     \Nahkampf\Larpcal\Output::write($larps);
 });

@@ -41,9 +41,11 @@ class Larp
         $limit = 10;
         $larps = [];
         $andwhere["published"] = "published=\"Y\"";
-        // handle filters and build SQL
-        // todo
-        if (isset($filters)) {
+        // a hack for nullable variadic arrays
+        if ($filters[0] == null) {
+            $filters = null;
+        }
+        if ($filters != null) {
             foreach ($filters[0] as $key => $value) {
                 switch ($key) {
                     case "published":
