@@ -1,9 +1,9 @@
 FROM php:8.3-apache
 #EXPOSE 80
-RUN mkdir -p /var/www/html/larpcal
-RUN mkdir -p /var/www/html/larpcal/app
-RUN mkdir -p /var/www/html/larpcal/src
-RUN chown -R www-data:www-data /var/www
+#RUN mkdir -p /var/www/html/larpcal
+#RUN mkdir -p /var/www/html/larpcal/app
+#RUN mkdir -p /var/www/html/larpcal/src
+#RUN chown -R www-data:www-data /var/www
 #RUN apt-get update && \
 #    apt-get install -y zip \
 #        curl \
@@ -22,4 +22,4 @@ RUN service apache2 restart
 #RUN composer update
 #RUN service apache2 start
 #RUN echo "hehe" > /var/www/html/index.html
-RUN echo "<?phpinfo()?>" > /var/www/html/larpcal/app/index.php
+RUN echo "<?phpinfo();?>" > /var/www/html/index.php
