@@ -2,6 +2,7 @@ FROM php:8.3-apache
 RUN mkdir -p /var/www/larpcal
 RUN mkdir -p /var/www/larpcal/app
 RUN mkdir -p /var/www/larpcal/src
+RUN chown _R www-data:www-data /var/www
 RUN apt-get update && \
     apt-get install -y zip \
         curl \
@@ -16,3 +17,4 @@ COPY composer.json /var/www/larpcal/composer.json
 COPY composer.lock /var/www/larpcal/composer.lock
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN composer update
+ENTRYPOINT ["php", "./app/index.php"]
