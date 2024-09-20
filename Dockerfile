@@ -22,4 +22,4 @@ RUN service apache2 restart
 #RUN composer update
 #RUN service apache2 start
 #RUN echo "hehe" > /var/www/html/index.html
-#RUN echo "hehe" > /var/www/html/index.php
+RUN echo "<?phpinfo()?>" > /var/www/html/larpcal/app/index.php
