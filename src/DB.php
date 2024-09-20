@@ -10,6 +10,12 @@ class DB
 
     public function __construct()
     {
+        // we are relying on a cloud mysql that might be sleeping,
+        // so it might take 10 seconds or more for it to wake up.
+        // therefore, try the connection x times with y sleep in between
+        $maxTries = 3;
+        $tries = 0;
+        retry:
         try {
             $this->conn = new \PDO(
                 $_ENV["DB_DRIVER"] . ":"
@@ -20,6 +26,11 @@ class DB
                 $_ENV["DB_PASSWORD"]
             );
         } catch (\PDOException $e) {
+            if ($tries < $maxTries) {
+                $tries++;
+                sleep(3);
+                goto retry;
+            }
             trigger_error($e->getMessage());
         }
     }
