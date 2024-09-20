@@ -10,6 +10,7 @@ RUN apt-get update && \
     docker-php-ext-install mysqli pdo pdo_mysql
 COPY conf/larpcal.conf /etc/apache2/sites-available/000-default.conf
 COPY conf/apache2.conf /etc/apache2/apache.conf
+RUN a2dismod autoindex
 RUN a2ensite 000-default
 RUN a2enmod rewrite && \
     service apache2 restart
