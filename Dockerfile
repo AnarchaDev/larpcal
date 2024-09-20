@@ -21,5 +21,5 @@ FROM php:8.3-apache
 #COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 #RUN composer update
 #RUN service apache2 start
-RUN echo "hehe" > /var/www/index.html
-RUN echo "hehe" > /var/www/index.php
+RUN echo "hehe" > /var/www/html/index.html
+RUN echo "hehe" > /var/www/html/index.php
