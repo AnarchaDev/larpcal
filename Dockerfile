@@ -18,4 +18,5 @@ COPY composer.json /var/www/larpcal/composer.json
 COPY composer.lock /var/www/larpcal/composer.lock
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN composer update
+EXPOSE 80
 RUN apache2-foreground &
