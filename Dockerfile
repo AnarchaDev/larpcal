@@ -20,4 +20,6 @@ COPY composer.json /var/www/composer.json
 COPY composer.lock /var/www/composer.lock
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN composer update
-RUN echo "<?phpinfo();?>" > /var/www/html/index.php
+COPY ./src /var/www/src
+COPY ./app /var/www/html
+#RUN echo "<?phpinfo();?>" > /var/www/html/index.php
