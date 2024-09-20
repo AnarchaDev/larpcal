@@ -2,7 +2,7 @@ FROM php:8.3-apache
 RUN mkdir -p /var/www/larpcal
 RUN mkdir -p /var/www/larpcal/app
 RUN mkdir -p /var/www/larpcal/src
-RUN chown _R www-data:www-data /var/www
+RUN chown -R www-data:www-data /var/www
 RUN apt-get update && \
     apt-get install -y zip \
         curl \
