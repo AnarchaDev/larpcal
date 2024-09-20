@@ -1,13 +1,13 @@
 FROM php:8.3-apache
+RUN mkdir -p /var/www/larpcal
+RUN mkdir -p /var/www/larpcal/app
+RUN mkdir -p /var/www/larpcal/src
 RUN apt-get update && \
     apt-get install -y zip \
         curl \
         unzip && \
     docker-php-ext-install mysqli pdo pdo_mysql
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
-RUN mkdir -p /var/www/larpcal
-RUN mkdir -p /var/www/larpcal/app
-RUN mkdir -p /var/www/larpcal/src
 RUN a2enmod rewrite && \
     service apache2 restart
 WORKDIR /var/www/larpcal
