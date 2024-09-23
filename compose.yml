@@ -4,11 +4,11 @@ services:
       - "80:80"
     build: './'
     volumes:
-      - ./app:/var/www/larpcal/app
-      - ./src:/var/www/larpcal/src
+      - ./app:/var/www/html
+      - ./src:/var/www/src
     env_file:
       - path: ./.env
-        required: false
+        required: true
 volumes:
   app:
   src:
