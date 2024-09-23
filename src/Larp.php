@@ -131,4 +131,108 @@ class Larp
         $res = $db->getOne($sql);
         return $db->getOne($sql);
     }
+
+    private function validate(): bool|\Throwable
+    {
+        // validates a larp object
+        if (!strlen($this->name) > 2) {
+            throw new \Exception("Name missing or too short");
+        }
+        if (!strlen($this->organizers) > 2) {
+            throw new \Exception("Organizers missing or too short");
+        }
+        if (!strlen($this->pitch) > 10) {
+            throw new \Exception("Pitch missing or too short");
+        }
+        if (strlen($this->url) > 0) {
+            if (!filter_var($this->url, FILTER_VALIDATE_URL)) {
+                throw new \Exception("URL malformed?");
+            }
+        }
+        if (strlen($this->email) > 0) {
+            if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+                throw new \Exception("Email address invalid?");
+            }
+        }
+        if (isset($this->dates) && is_array($this->dates) && count($this->dates) > 0) {
+            foreach ($this->dates as $idx => $date) {
+                // do we have both a start and end date?
+                if (!isset($date["date_start"]) || !$date["date_end"]) {
+                    throw new \Exception("Dates require both a start and end");
+                }
+                // are these valid dates
+                if (!Utils::validateDate($date["date_start"], "Y-m-d")) {
+                    throw new \Exception("Start date has invalid date or format.");
+                }
+                if (!Utils::validateDate($date["date_end"], "Y-m-d")) {
+                    throw new \Exception("End date has invalid date or format.");
+                }
+                // is this date in the future?
+                $now = new \DateTime("now");
+                $start = new \DateTime($date["date_start"]);
+                $end = new \DateTime($date["date_end"]);
+                if ($now->format("Ymd") >= $start->format("Ymd") || $now->format("Ymd") >= $end->format("Ymd")) {
+                    throw new \Exception("Dates have to be in the future");
+                }
+            }
+        } else {
+            throw new \Exception("No dates set?");
+        }
+        return true;
+    }
+
+    /**
+     * saves this larp in the db
+     */
+    public function save(): array|\Throwable
+    {
+        $this->validate();
+        $db = new DB();
+        $sql = sprintf(
+            "INSERT INTO calendar SET 
+            name = %s,
+            organizers = %s,
+            pitch = %s,
+            url = %s,
+            email = %s,
+            published = 'N',
+            cancelled = 'N',
+            countryId = %d",
+            $db->e($this->name),
+            $db->e($this->organizers),
+            $db->e($this->pitch),
+            $db->e($this->url),
+            $db->e($this->email),
+            (int)$this->countryId
+        );
+        $res = $db->query($sql);
+        $larp_id = (int)$db->lastInsertId();
+        if ($larp_id > 0) {
+            // insert dates
+            foreach ($this->dates as $idx => $dates) {
+                $sql = sprintf(
+                    "INSERT INTO dates SET 
+                    larp_id = %d,
+                    date_start = %s,
+                    date_end = %s",
+                    $larp_id,
+                    $db->e($dates["date_start"]),
+                    $db->e($dates["date_end"])
+                );
+                $db->query($sql);
+            }
+            // insert tags (if any)
+            foreach ($this->tags as $idx => $tagId) {
+                $sql = sprintf("INSERT INTO larp_has_tags SET larp_id = %d, tag_id = %d", $larp_id, $tagId);
+                $db->query($sql);
+            }
+        } else {
+            throw new \Exception("Insert failed or could not get last_insert_id");
+        }
+        // generate a token for this larp
+        $token = Token::generateToken();
+        $sql = sprintf("INSERT INTO tokens SET larp_id={$larp_id}, token_hash=%s", $db->e($token["hash"]));
+        $db->query($sql);
+        return ["larpId" => $larp_id, "token" => $token];
+    }
 }

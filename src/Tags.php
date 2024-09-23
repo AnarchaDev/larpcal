@@ -7,7 +7,7 @@ class Tags
     public static function getAll(): array
     {
         $db = new DB();
-        $tags = $db->getAll("SELECT tags FROM tags ORDER BY tag ASC");
+        $tags = $db->getAll("SELECT * FROM tags ORDER BY tag ASC");
         return $tags;
     }
 

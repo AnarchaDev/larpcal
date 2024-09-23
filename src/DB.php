@@ -57,4 +57,9 @@ class DB
     {
         return $this->query($sql)->fetch(\PDO::FETCH_ASSOC);
     }
+
+    public function lastInsertId()
+    {
+        return $this->conn->lastInsertId();
+    }
 }

@@ -4,25 +4,29 @@ namespace Nahkampf\Larpcal;
 
 class Image
 {
+    use \Nahkampf\Larpcal\Output;
+    use \Nahkampf\Larpcal\Larp;
+    use \Nahkampf\Larpcal\Token;
+
     public static function handleUpload(Larp $larp)
     {
-        if (!$larp instanceof \Nahkampf\Larpcal\Larp) {
-            \Nahkampf\Larpcal\Output::write(["That larp doesn't exist!"], 404);
+        if (!$larp instanceof Larp) {
+            Output::write(["That larp doesn't exist!"], 404);
             exit;
         }
-        if (!\Nahkampf\Larpcal\Token::checkToken($larp, $_POST["token"])) {
-            \Nahkampf\Larpcal\Output::write(["Token invalid!"], 401);
+        if (!Token::checkToken($larp, $_POST["token"])) {
+            Output::write(["Token invalid!"], 401);
             exit;
         }
         if (empty($_FILES["file"])) {
-            \Nahkampf\Larpcal\Output::write(["No file provided?"], 400);
+            Output::write(["No file provided?"], 400);
             exit;
         }
         // handle file
         // we can't trust mime detection because it's just working off extension
         // so instead we need to check the file type
         if (!$imageinfo = getimagesize($_FILES["file"]["tmp_name"])) {
-            \Nahkampf\Larpcal\Output::write(["Not a valid image file"], 400);
+            Output::write(["Not a valid image file"], 400);
             exit;
         }
 
