@@ -19,6 +19,7 @@ class Larp
     public string $createdAt;
     public ?int $countryId;
     public ?array $where;
+    public ?array $tags;
 
     public function __construct(array ...$args)
     {
@@ -105,6 +106,7 @@ class Larp
         $larp = new Larp($result);
         $larp->dates = $larp->getDates();
         $larp->where = $larp->getCountryData();
+        $larp->tags = Tags::getTagsForLarp($larp);
         return $larp;
     }
 

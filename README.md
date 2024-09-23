@@ -1,6 +1,16 @@
 # larpcal
 A larp calendar (backend and API).
 
+## TODOs
+- [ ] Set up a dev recipie in docker-compose
+  - [ ] Mount local codebase using a volume/bind-mount so we don't need to rebuild every time we change something
+- [ ] Exports
+  - [ ] RSS
+  - [ ] CSV
+  - [ ] iCal
+- [ ] Look into websockets for mina
+- [ ] How to solve "desktop notices" and app pushes?
+
 # Public endpoints
 ## Get all larps
 Gets all the (published) larps that have one or more dates that are in the future.

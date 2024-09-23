@@ -39,6 +39,12 @@ $router->post('/larp/(\d+)/image', function (int $larpId) {
     \Nahkampf\Larpcal\Image::handleUpload($larp);
 });
 
+// Get a list of tags
+$router->get('/tags', function () {
+    $tags = \Nahkampf\Larpcal\Tags::getAll();
+    \Nahkampf\Larpcal\Output::write($tags);
+});
+
 $router->set404(function () {
     \Nahkampf\Larpcal\Output::write(
         ["error" => "404! It is pitch black. You are likely to be eaten by a grue."],
