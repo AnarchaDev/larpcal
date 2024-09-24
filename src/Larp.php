@@ -54,10 +54,12 @@ class Larp
                         $andwhere["published"] = "published = " . $db->e($value);
                         break;
                     case "from":
-                        $andwhere["from"] = "id IN (SELECT larp_id FROM dates WHERE date_start >=" . $db->e($value) . ")";
+                        $andwhere["from"] = "id IN (SELECT larp_id FROM dates WHERE date_start >="
+                            . $db->e($value) . ")";
                         break;
                     case "to":
-                        $andwhere["to"] = "id IN (SELECT larp_id FROM dates WHERE date_start <=" . $db->e($value) . ")";
+                        $andwhere["to"] = "id IN (SELECT larp_id FROM dates WHERE date_start <="
+                            . $db->e($value) . ")";
                         break;
                     case "org":
                         $andwhere["org"] = "organizers LIKE (" . $db->e("%{$value}%") . ")";
@@ -68,10 +70,12 @@ class Larp
                             $c[] = $db->e($country);
                         }
                         $countries = implode(",", $c);
-                        $andwhere["countries"] = "countryId IN (SELECT id FROM countries WHERE isoAlpha3 IN({$countries}))";
+                        $andwhere["countries"] = "countryId IN (SELECT id FROM countries WHERE isoAlpha3 IN("
+                            . $countries . "))";
                         break;
                     case "continent":
-                        $andwhere["continent"] = "countryId IN (SELECT id FROM countries WHERE continentName=" . $db->e($value) . ")";
+                        $andwhere["continent"] = "countryId IN (SELECT id FROM countries WHERE continentName="
+                            . $db->e($value) . ")";
                         break;
                     case "tags":
                         break;
@@ -117,7 +121,8 @@ class Larp
     public function getDates()
     {
         $db = new DB();
-        $sql = "SELECT dates.date_start, dates.date_end FROM dates WHERE larp_id = " . (int)$this->id . " ORDER BY date_start ASC";
+        $sql = "SELECT dates.date_start, dates.date_end FROM dates WHERE larp_id = "
+        . (int)$this->id . " ORDER BY date_start ASC";
         return $db->getAll($sql);
     }
 
@@ -131,7 +136,8 @@ class Larp
                 "continent" => "--"
             ];
         }
-        $sql = "SELECT countryName as name, isoAlpha3 as iso, continentName as continent FROM countries WHERE id = " . (int)$this->countryId;
+        $sql = "SELECT countryName as name, isoAlpha3 as iso, continentName as continent FROM countries WHERE id = "
+        . (int)$this->countryId;
         $res = $db->getOne($sql);
         return $db->getOne($sql);
     }

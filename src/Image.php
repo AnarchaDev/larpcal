@@ -2,9 +2,9 @@
 
 namespace Nahkampf\Larpcal;
 
-use \Nahkampf\Larpcal\Output;
-use \Nahkampf\Larpcal\Larp;
-use \Nahkampf\Larpcal\Token;
+use Nahkampf\Larpcal\Output;
+use Nahkampf\Larpcal\Larp;
+use Nahkampf\Larpcal\Token;
 
 class Image
 {
@@ -63,10 +63,13 @@ class Image
             exit;
         }
         // convert the file
-        $cmd = "convert /var/www/html/images/{$larp->id}_orig.jpg -resize 1024x768^ -gravity center -extent 1024x768 -quality 85 ../html/images/" . $larp->id . ".jpg";
+        $cmd = "convert /var/www/html/images/" . $larp->id
+        . "_orig.jpg -resize 1024x768^ -gravity center -extent 1024x768 -quality 85 ../html/images/"
+        . $larp->id . ".jpg";
         $res = shell_exec($cmd);
         Output::write(
-            ["larpId" => $larp->id, "imageUrl" => "https://{$_SERVER["HTTP_HOST"]}/images/{$larp->id}.jpg"],
+            ["larpId" => $larp->id,
+            "imageUrl" => "https://{$_SERVER["HTTP_HOST"]}/images/{$larp->id}.jpg"],
             201
         );
         // delete originals
