@@ -2,14 +2,17 @@
 
 namespace Nahkampf\Larpcal;
 
+use \Nahkampf\Larpcal\Output;
+use \Nahkampf\Larpcal\Larp;
+use \Nahkampf\Larpcal\Token;
+
 class Image
 {
-    use \Nahkampf\Larpcal\Output;
-    use \Nahkampf\Larpcal\Larp;
-    use \Nahkampf\Larpcal\Token;
-
     public static function handleUpload(Larp $larp)
     {
+        if (empty($_POST)) {
+            Output::write(["No POST data!", 400]);
+        }
         if (!$larp instanceof Larp) {
             Output::write(["That larp doesn't exist!"], 404);
             exit;
@@ -25,14 +28,31 @@ class Image
         // handle file
         // we can't trust mime detection because it's just working off extension
         // so instead we need to check the file type
-        if (!$imageinfo = getimagesize($_FILES["file"]["tmp_name"])) {
+        $imageinfo = getimagesize($_FILES["file"]["tmp_name"]);
+        if (!$imageinfo) {
             Output::write(["Not a valid image file"], 400);
             exit;
         }
-
+        list($width, $height, $type, $attributes) = $imageinfo;
+        // Image needs to be at least 1024x768
+        if ($width < 1024 || $height < 768) {
+            Output::write(["Image resolution too low, minimum 1024x768 px"], 422);
+            exit;
+        }
+        // move the file
+        if (!@move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/images/" . $larp->id . "_orig.jpg")) {
+            Output::write(["Failed saving or copying uploaded file!"], 500);
+            exit;
+        }
         // convert the file
-        // @todo use ImageMagick `convert` through exec() here
-
-        //move_uploaded_file($_FILES["file"]["tmp_name"], __DIR__ "../public/images/" . )
+        $cmd = "convert /var/www/html/images/{$larp->id}_orig.jpg -resize 1024x768^ -gravity center -extent 1024x768 -quality 85 ../html/images/" . $larp->id . ".jpg";
+        $res = shell_exec($cmd);
+        Output::write(
+            ["larpId" => $larp->id, "imageUrl" => "https://{$_SERVER["HTTP_HOST"]}/images/{$larp->id}.jpg"],
+            201
+        );
+        // delete originals
+        exec("rm -rf /var/www/html/images/*_orig.jpg");
+        exit;
     }
 }

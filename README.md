@@ -172,6 +172,23 @@ Takes a json body. Requires the X-AUTH-API header to be set. Also returns a `tok
 ```
 </details>
 
+## Upload an image
+Takes a Multipart Form data payload. Requires the form fields `file` and `token`. The image must be at least 1024x768px, and will be centercropped and rescaled to produce a 1024x768px image (jpeg, quality=0.85).
+
+**URL** : `/larp/{id}/image`<br>
+**Method** : `POST`<br>
+**Example return** : <br>
+<details>
+<summary>Return data example</summary>
+
+```json
+{
+  "larpId": 16,
+  "imageUrl": "https://foo.com/images/16.jpg"
+}
+```
+</details>
+
 ## Get a list of available tags
 
 **URL** : `/tags`<br>

@@ -2,7 +2,8 @@ FROM php:8.3-apache
 RUN apt-get update && \
     apt-get install -y zip \
         curl \
-        unzip && \
+        unzip \
+        imagemagick && \
     docker-php-ext-install mysqli pdo pdo_mysql
 COPY conf/larpcal.conf /etc/apache2/sites-available/000-default.conf
 RUN a2ensite 000-default

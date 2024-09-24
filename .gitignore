@@ -4,3 +4,4 @@ composer.phar
 .phpactor.json
 .DS_Store
 LarpCal/
+app/images/*.jpg
