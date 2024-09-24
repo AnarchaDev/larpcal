@@ -17,10 +17,23 @@ class Image
             Output::write(["That larp doesn't exist!"], 404);
             exit;
         }
-        if (!Token::checkToken($larp, $_POST["token"])) {
-            Output::write(["Token invalid!"], 401);
+        if (isset($_POST["token"])) {
+            if (!Token::checkToken($larp, $_POST["token"])) {
+                Output::write(["Token invalid!"], 401);
+                exit;
+            }
+        }
+        if (isset($_SERVER['HTTP_X_API_KEY'])) {
+            if ($_SERVER['HTTP_X_API_KEY'] != $_ENV["API_KEY"]) {
+                Output::write(["Auth required"], 401);
+                exit;
+            }
+        }
+        if (!isset($_SERVER['HTTP_X_API_KEY']) && !isset($_POST["token"])) {
+            Output::write(["Auth or token required"], 401);
             exit;
         }
+
         if (empty($_FILES["file"])) {
             Output::write(["No file provided?"], 400);
             exit;
