@@ -20,6 +20,7 @@ class Larp
     public ?int $countryId;
     public ?array $where;
     public ?array $tags;
+    public string $image;
 
     public function __construct(array ...$args)
     {
@@ -107,6 +108,9 @@ class Larp
         $larp->dates = $larp->getDates();
         $larp->where = $larp->getCountryData();
         $larp->tags = Tags::getTagsForLarp($larp);
+        if (file_exists("../app/images/{$larp->id}.jpg") || file_exists("../html/images/{$larp->id}.jpg")) {
+            $larp->image = "https://{$_SERVER["HTTP_HOST"]}/images/{$larp->id}.jpg";
+        }
         return $larp;
     }
 
