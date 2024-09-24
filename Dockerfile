@@ -16,3 +16,4 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN composer update
 COPY ./src /var/www/src
 COPY ./app /var/www/html
+RUN chmod a+rwx -R /var/www/html/images
