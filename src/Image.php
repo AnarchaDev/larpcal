@@ -40,7 +40,12 @@ class Image
             exit;
         }
         // move the file
-        if (!@move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/images/" . $larp->id . "_orig.jpg")) {
+        try {
+            $move = move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/images/" . $larp->id . "_orig.jpg");
+        } catch (\Throwable $t) {
+            print_r($t->getMessage());
+        }
+        if (!$move) {
             Output::write(["Failed saving or copying uploaded file!"], 500);
             exit;
         }
