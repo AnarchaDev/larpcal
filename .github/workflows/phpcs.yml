@@ -1,11 +1,11 @@
 name: "CI"
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
-    paths:
-      - "**.php"
-      - "phpcs.xml"
-      - ".github/workflows/phpcs.yml"
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
 
 jobs:
   phpcs:
