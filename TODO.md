@@ -1,0 +1,47 @@
+# Stuff that needs to be done at one point or another
+- [ ] Export (filtered) to CSV
+- [ ] Export (filtered) to RSS
+- [ ] Filters: tags
+- [ ] Filters: exlude value (ie "not having")
+- [ ] Sort by <column>
+- [ ] Sort order [ASC|DESC]
+- [ ] Convert images to WebP
+- [ ] Endpoint for editing larp (user)
+- [ ] Endpoint for publishing/depublishing larp (admin)
+- [ ] Implement PushOver notifications on new larps
+- [ ] Sanitize all input (disallow tags everywhere except approved set in `pitch`
+- [ ] Make the filename a hash of the id instead of just the numerical id
+- [ ] Bot protection / DDOS protection
+
+# Ideas and "nice to haves"
+- [ ] Export (filtered) to XLS
+- [ ] Export (filtered) to iCal
+- [ ] "Page" for a single larp
+  - [ ] Twitter Card compliant
+  - [ ] Facebook OG tags
+  - [ ] Generate various image sizes/formats?
+- [ ] (optional) email address when adding a larp
+- [ ] Issue new token to email address (user)
+- [ ] Query cache (PDO)
+- [ ] Frontend caches (no need to wake the server unless necessary)
+- [ ] Scheduled database backups
+- [ ] Larp stats
+- [ ] "Google Analyics" (this is probably frontend)
+- [ ] Prune data & files for expired/deleted larps
+- [ ] Internationalization & PO files (for "user selected languages" on frontend)
+- [ ] More/better tags
+- [ ] Allow users to create their own tags (admin-approved)
+- [ ] Add a donation link (paypal / buy me a coffee?)
+- [ ] Allow "app-specific" API keys (so anyone can build their own frontend and interact with larpcal)
+- [ ] Add "Like" functionality (call it "hype"?) for larps, so everyone can see what's "hot"
+- [ ] A nice logotype
+- [ ] Icons (UI stuff + tags)
+- [ ] Optimize indexes and queries
+- [ ] More try/catches and graceful error/warning handling
+- [ ] Logging
+- [ ] Implement PHP Mess Detection
+- [ ] Implement PSALM static analyzer
+- [ ] Expose schemas for better postman/bruno/frontend discovery
+- [ ] Unit testing
+- [ ] Localization (dates etc)
+- [ ] Internationalization (language files + translations)
