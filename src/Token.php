@@ -21,7 +21,7 @@ class Token
         $sql = "SELECT token_hash FROM tokens WHERE larp_id=" . $larp->id;
         $res = $db->getOne($sql);
         if (empty($res)) {
-            \Nahkampf\Larpcal\Output::write("An error occured (larp has no token)", 500);
+            \Nahkampf\Larpcal\Output::write(sprintf(_("An error occured: %s"), "Token missing or invalid"), 500);
             exit;
         }
         if (password_verify($token, $res["token_hash"])) {

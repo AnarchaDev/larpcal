@@ -9,7 +9,7 @@ class Output
         return json_encode($data);
     }
 
-    public static function write(stdClass|array|string $data, int $code = 200)
+    public static function write(\stdClass|array|string $data, int $code = 200)
     {
         http_response_code($code);
         header("Content-type: application/json");

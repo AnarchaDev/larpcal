@@ -1,15 +1,15 @@
 # Swedish translations for PACKAGE package.
 # Copyright (C) 2024 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#  <tz@sulaco.>, 2024.
+#  <kreuzweg@gmail.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 13:27+0200\n"
-"PO-Revision-Date: 2024-09-25 13:29+0200\n"
-"Last-Translator:  <tz@sulaco.>\n"
+"POT-Creation-Date: 2024-09-25 14:48+0200\n"
+"PO-Revision-Date: 2024-09-25 14:00+0200\n"
+"Last-Translator:  <kreuzweg@gmail.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,83 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: langtest.php:7
-msgid "Hello"
+#: ../app/index.php:51 ../src/Image.php:28
+msgid "Authorization required"
+msgstr ""
+
+#: ../app/index.php:76 ../src/Token.php:24
+#, php-format
+msgid "An error occured: %s"
+msgstr ""
+
+#: ../app/index.php:108
+msgid "404! It is pitch black. You are likely to be eaten by a grue."
+msgstr ""
+
+#: ../src/Image.php:14
+msgid "No POST data!"
+msgstr ""
+
+#: ../src/Image.php:17
+msgid "That larp doesn't exist!"
+msgstr ""
+
+#: ../src/Image.php:22
+msgid "Token invalid!"
+msgstr ""
+
+#: ../src/Image.php:33
+msgid "Authorization or token required"
+msgstr ""
+
+#: ../src/Image.php:38
+msgid "No file provided"
+msgstr ""
+
+#: ../src/Image.php:46
+msgid "Not a valid image file"
+msgstr ""
+
+#: ../src/Image.php:52
+msgid "Image resolution too low, minimum %"
+msgstr ""
+
+#: ../src/Image.php:62
+msgid "Failed saving or copying uploaded file!"
+msgstr ""
+
+#: ../src/Larp.php:149 ../src/Larp.php:152 ../src/Larp.php:155
+#, php-format
+msgid "A value is missing or too short: %s"
+msgstr ""
+
+#: ../src/Larp.php:159
+msgid "URL malformed?"
+msgstr ""
+
+#: ../src/Larp.php:164
+#, php-format
+msgid "Invalid value: %s"
+msgstr ""
+
+#: ../src/Larp.php:171
+msgid "Dates require both a start and end"
+msgstr ""
+
+#: ../src/Larp.php:175 ../src/Larp.php:178
+#, php-format
+msgid "Date is invalid: %s"
+msgstr ""
+
+#: ../src/Larp.php:185
+msgid "Dates must be in the future"
+msgstr ""
+
+#: ../src/Larp.php:189
+#, php-format
+msgid "Mandatory value(s) missing: %s"
+msgstr ""
+
+#: ../src/Larp.php:240
+msgid "Insert failed or could not get last_insert_id"
 msgstr ""

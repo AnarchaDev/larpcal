@@ -146,47 +146,47 @@ class Larp
     {
         // validates a larp object
         if (!strlen($this->name) > 2) {
-            throw new \Exception("Name missing or too short");
+            throw new \Exception(sprintf(_("A value is missing or too short: %s"), "name"));
         }
         if (!strlen($this->organizers) > 2) {
-            throw new \Exception("Organizers missing or too short");
+            throw new \Exception(sprintf(_("A value is missing or too short: %s"), "organizers"));
         }
         if (!strlen($this->pitch) > 10) {
-            throw new \Exception("Pitch missing or too short");
+            throw new \Exception(sprintf(_("A value is missing or too short: %s"), "pitch"));
         }
         if (strlen($this->url) > 0) {
             if (!filter_var($this->url, FILTER_VALIDATE_URL)) {
-                throw new \Exception("URL malformed?");
+                throw new \Exception(_("URL malformed?"));
             }
         }
         if (strlen($this->email) > 0) {
             if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-                throw new \Exception("Email address invalid?");
+                throw new \Exception(sprintf(_("Invalid value: %s"), "email"));
             }
         }
         if (isset($this->dates) && is_array($this->dates) && count($this->dates) > 0) {
             foreach ($this->dates as $idx => $date) {
                 // do we have both a start and end date?
                 if (!isset($date["date_start"]) || !$date["date_end"]) {
-                    throw new \Exception("Dates require both a start and end");
+                    throw new \Exception(_("Dates require both a start and end"));
                 }
                 // are these valid dates
                 if (!Utils::validateDate($date["date_start"], "Y-m-d")) {
-                    throw new \Exception("Start date has invalid date or format.");
+                    throw new \Exception(sprintf(_("Date is invalid: %s"), "date_start"));
                 }
                 if (!Utils::validateDate($date["date_end"], "Y-m-d")) {
-                    throw new \Exception("End date has invalid date or format.");
+                    throw new \Exception(sprintf(_("Date is invalid: %s"), "date_end"));
                 }
                 // is this date in the future?
                 $now = new \DateTime("now");
                 $start = new \DateTime($date["date_start"]);
                 $end = new \DateTime($date["date_end"]);
                 if ($now->format("Ymd") >= $start->format("Ymd") || $now->format("Ymd") >= $end->format("Ymd")) {
-                    throw new \Exception("Dates have to be in the future");
+                    throw new \Exception(_("Dates must be in the future"));
                 }
             }
         } else {
-            throw new \Exception("No dates set?");
+            throw new \Exception(sprintf(_("Mandatory value(s) missing: %s"), "dates"));
         }
         return true;
     }
@@ -237,7 +237,7 @@ class Larp
                 $db->query($sql);
             }
         } else {
-            throw new \Exception("Insert failed or could not get last_insert_id");
+            throw new \Exception(_("Insert failed or could not get last_insert_id"));
         }
         // generate a token for this larp
         $token = Token::generateToken();

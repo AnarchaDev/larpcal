@@ -11,31 +11,31 @@ class Image
     public static function handleUpload(Larp $larp)
     {
         if (empty($_POST)) {
-            Output::write(["No POST data!", 400]);
+            Output::write([_("No POST data!"), 400]);
         }
         if (!$larp instanceof Larp) {
-            Output::write(["That larp doesn't exist!"], 404);
+            Output::write([_("That larp doesn't exist!")], 404);
             exit;
         }
         if (isset($_POST["token"])) {
             if (!Token::checkToken($larp, $_POST["token"])) {
-                Output::write(["Token invalid!"], 401);
+                Output::write([_("Token invalid!")], 401);
                 exit;
             }
         }
         if (isset($_SERVER['HTTP_X_API_KEY'])) {
             if ($_SERVER['HTTP_X_API_KEY'] != $_ENV["API_KEY"]) {
-                Output::write(["Auth required"], 401);
+                Output::write([_("Authorization required")], 401);
                 exit;
             }
         }
         if (!isset($_SERVER['HTTP_X_API_KEY']) && !isset($_POST["token"])) {
-            Output::write(["Auth or token required"], 401);
+            Output::write([_("Authorization or token required")], 401);
             exit;
         }
 
         if (empty($_FILES["file"])) {
-            Output::write(["No file provided?"], 400);
+            Output::write([_("No file provided")], 400);
             exit;
         }
         // handle file
@@ -43,13 +43,13 @@ class Image
         // so instead we need to check the file type
         $imageinfo = getimagesize($_FILES["file"]["tmp_name"]);
         if (!$imageinfo) {
-            Output::write(["Not a valid image file"], 400);
+            Output::write([_("Not a valid image file")], 400);
             exit;
         }
         list($width, $height, $type, $attributes) = $imageinfo;
         // Image needs to be at least 1024x768
         if ($width < 1024 || $height < 768) {
-            Output::write(["Image resolution too low, minimum 1024x768 px"], 422);
+            Output::write([sprintf(_("Image resolution too low, minimum %"), "1024x768px")], 422);
             exit;
         }
         // move the file
@@ -59,7 +59,7 @@ class Image
             print_r($t->getMessage());
         }
         if (!$move) {
-            Output::write(["Failed saving or copying uploaded file!"], 500);
+            Output::write([_("Failed saving or copying uploaded file!")], 500);
             exit;
         }
         // convert the file

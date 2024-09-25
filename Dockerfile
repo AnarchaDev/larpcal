@@ -29,3 +29,6 @@ COPY ./src /var/www/src
 COPY ./app /var/www/html
 RUN chmod a+rwx -R /var/www/html/images
 RUN service apache2 restart
+# Run language format conversions
+#WORKDIR /var/www/translations
+#RUN ./translate.sh

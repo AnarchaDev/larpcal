@@ -5,3 +5,5 @@ composer.phar
 .DS_Store
 LarpCal/
 app/images/*.jpg
+/translations/MASTER.pot
+/translations/POTFILES

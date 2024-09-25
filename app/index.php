@@ -14,6 +14,33 @@ use Nahkampf\Larpcal\Image;
 use Nahkampf\Larpcal\Tags;
 use Nahkampf\Larpcal\Utils;
 
+# Set up I18N
+if (isset($_GET["lang"])) {
+    switch ($_GET["lang"]) {
+        case "sv":
+            setlocale(LC_ALL, 'sv_SE.UTF-8');
+            break;
+        case "dk":
+            setlocale(LC_ALL, 'da_DK.UTF-8');
+            break;
+        case "no":
+            setlocale(LC_ALL, 'nb_NO.UTF-8');
+            break;
+        case "fi":
+            setlocale(LC_ALL, 'fi_FI.UTF-8');
+            break;
+        case "gb":
+            setlocale(LC_ALL, 'en_GB.UTF-8');
+            break;
+        case "us":
+        default:
+            setlocale(LC_ALL, 'en_US.UTF-8');
+            break;
+    }
+}
+bindtextdomain("larpcal-backend", "translations");
+textdomain("larpcal-backend");
+
 # Set up routes
 $router = new \Bramus\Router\Router();
 
@@ -21,7 +48,7 @@ $router = new \Bramus\Router\Router();
 // so use this middleware
 $router->before('POST|PUT|PATCH|DELETE', '/larp', function () {
     if (!isset($_SERVER['HTTP_X_API_KEY']) || $_SERVER['HTTP_X_API_KEY'] != $_ENV["API_KEY"]) {
-        Output::write(["error" => "This operation requires authentication."], 403);
+        Output::write(["error" => _("Authorization required")], 403);
         exit();
     }
 });
@@ -46,7 +73,7 @@ $router->post('/larp', function () {
         $res = $larp->save();
         Output::write($res, 201);
     } catch (\Throwable $e) {
-        Output::write("An error occured: " . $e->getMessage(), 400);
+        Output::write([sprintf(_("An error occured: %s"), $e->getMessage())], 400);
         exit;
     }
 });
@@ -78,7 +105,7 @@ $router->get('/countries', function () {
 
 $router->set404(function () {
     Output::write(
-        ["error" => "404! It is pitch black. You are likely to be eaten by a grue."],
+        ["error" => _("404! It is pitch black. You are likely to be eaten by a grue.")],
         404
     );
 });
