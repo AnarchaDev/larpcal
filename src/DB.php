@@ -35,9 +35,6 @@ class DB
         }
     }
 
-    /**
-     * Executes a PDO query, returns a result
-     */
     public function query($sql)
     {
         return $this->conn->query($sql);
