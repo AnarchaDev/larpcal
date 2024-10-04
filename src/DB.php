@@ -43,23 +43,25 @@ class DB
     /**
      * Quick and dirty SQL Inject protection
      */
-    public function e($str)
+    public function e($str): bool|string
     {
-        return $this->conn->quote($str);
+        return ($this->conn->quote($str)) ?: false;
     }
 
-    public function getAll($sql)
+    public function getAll($sql): ?array
     {
-        return $this->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $this->query($sql);
+        return ($result->fetchAll(\PDO::FETCH_ASSOC)) ?: null;
     }
 
-    public function getOne($sql)
+    public function getOne($sql): ?array
     {
-        return $this->query($sql)->fetch(\PDO::FETCH_ASSOC);
+        $result = $this->query($sql);
+        return ($result->fetch(\PDO::FETCH_ASSOC) ?: null);
     }
 
-    public function lastInsertId()
+    public function lastInsertId(): bool|string
     {
-        return $this->conn->lastInsertId();
+        return ($this->conn->lastInsertId()) ?: false;
     }
 }

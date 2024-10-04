@@ -4,7 +4,7 @@ namespace Nahkampf\Larpcal;
 
 class Token
 {
-    public static function generateToken()
+    public static function generateToken(): array
     {
         $validchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         $tokenLength = 16;
@@ -20,11 +20,11 @@ class Token
         $db = new DB();
         $sql = "SELECT token_hash FROM tokens WHERE larp_id=" . $larp->id;
         $res = $db->getOne($sql);
-        if (empty($res)) {
+        if (!$res) {
             \Nahkampf\Larpcal\Output::write(sprintf(_("An error occured: %s"), "Token missing or invalid"), 500);
             exit;
         }
-        if (password_verify($token, $res["token_hash"])) {
+        if (password_verify($token, (string)$res["token_hash"])) {
             return true;
         }
         return false;
