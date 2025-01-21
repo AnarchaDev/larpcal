@@ -2,10 +2,20 @@
 A larp calendar (backend and API).
 
 ## TODOs
-- [ ] Exports
+- [ ] Outputs (with filtering)
   - [ ] RSS
+  - [ ] Email notifications
+  - [ ] Discord bot
+  - [ ] Mastodon account
+  - [ ] Bluesky account
+  - [ ] JSON
+  - [ ] HTML embed
+- [ ] Exports (with filters, dates etc)
+  - [ ] JSON
   - [ ] CSV
+  - [ ] XLS?
   - [ ] iCal
+- [ ] One admin-token per email address (valid over all events tied to that email)
 - [ ] Look into websockets for Mina (?)
 - [ ] How to solve "desktop notices" and app pushes?
 
